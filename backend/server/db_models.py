@@ -20,7 +20,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(30))
 
-    messages: Mapped[list["Message"]] = relationship(back_populates="user", lazy="select")
+    messages: Mapped[list["Message"]] = relationship(back_populates="user")
 
     @override
     def __repr__(self) -> str:
@@ -36,7 +36,19 @@ class Message(Base):
     sent_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())  # pylint: disable=not-callable; false positive
 
     user: Mapped[User] = relationship(back_populates="messages")
+    response: Mapped["Response"] = relationship(back_populates="message", lazy="joined")
 
     @override
     def __repr__(self) -> str:
         return f"User(id={self.id!r}, message={self.message!r}, user_id={self.user_id!r}"
+
+
+class Response(Base):
+    __tablename__: str = "response"
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    message_id: Mapped[int] = mapped_column(ForeignKey("message.id"), nullable=False)
+    response: Mapped[str] = mapped_column(String, nullable=False)
+    sent_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())  # pylint: disable=not-callable; false positive
+
+    message: Mapped[Message] = relationship(back_populates="response")

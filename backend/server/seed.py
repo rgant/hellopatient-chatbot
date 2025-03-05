@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .db_engine import sync_engine
-from .models import Message, User
+from .db_models import Message, User
 
 
 def seed_user_if_needed() -> None:

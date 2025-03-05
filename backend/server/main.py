@@ -1,35 +1,18 @@
-from datetime import datetime
-import uuid
-
 from fastapi import FastAPI, HTTPException
 from fastapi import status as http_status_codes
-from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from .seed import seed_user_if_needed
+from .api_models import MessageCreate, MessageRead, UserRead
 from .db_engine import engine
-from .models import Message, User
+from .db_models import Message, User
+from .seed import seed_user_if_needed
+from .utilities import get_response, read_response
 
 seed_user_if_needed()
 
 app = FastAPI()
-
-
-class MessageCreate(BaseModel):
-    message: str
-
-
-class MessageRead(BaseModel):
-    id: uuid.UUID
-    message: str
-    sent_at: datetime
-
-
-class UserRead(BaseModel):
-    id: int
-    name: str
 
 
 @app.get("/users/me")
@@ -59,7 +42,12 @@ async def get_my_messages() -> list[MessageRead]:
                 raise HTTPException(status_code=404, detail="User not found")
 
             return [
-                MessageRead(id=msg.id, message=msg.message, sent_at=msg.sent_at)
+                MessageRead(
+                    id=msg.id,
+                    message=msg.message,
+                    sent_at=msg.sent_at,
+                    response=read_response(msg.response),
+                )
                 for msg in user.messages
             ]
 
@@ -79,6 +67,14 @@ async def add_my_message(message_payload: MessageCreate) -> MessageRead:
 
             message = Message(message=message_payload.message, user=user)
             session.add(message)
+
+            message.response = get_response(message)
+
             await session.flush()
 
-            return MessageRead(id=message.id, message=message.message, sent_at=message.sent_at)
+            return MessageRead(
+                id=message.id,
+                message=message.message,
+                sent_at=message.sent_at,
+                response=read_response(message.response),
+            )
