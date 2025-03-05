@@ -11,7 +11,7 @@ database:
 .PHONY: backend
 backend:
 	osascript -e 'tell application "Terminal" to set background color of selected tab of the front window to {57825, 65021, 56540}' # green
-	cd backend; poetry run uvicorn main:app --reload
+	cd backend; poetry run uvicorn server.main:app --reload
 
 .PHONY: frontend
 frontend:

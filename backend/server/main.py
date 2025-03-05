@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import select
-from seed import seed_user_if_needed
 from sqlalchemy.ext.asyncio import AsyncSession
-from db_engine import engine
-from models import User
+
+from .seed import seed_user_if_needed
+from .db_engine import engine
+from .models import User
 
 seed_user_if_needed()
 
@@ -17,7 +18,8 @@ class UserRead(BaseModel):
 
 
 @app.get("/users/me")
-async def get_my_user():
+async def get_my_user() -> UserRead:
+    """Fetch public user object for current user."""
     async with AsyncSession(engine) as session:
         async with session.begin():
             # Sample logic to simplify getting the current user. There's only one user.
