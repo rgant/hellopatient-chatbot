@@ -1,8 +1,9 @@
-import type { FetchUserResult } from '@/models/User';
+import type { FetchUserResult } from '@/models/user';
 
 import { getUser } from '@/library/user-api';
 
 import ListMessages from './list-messages/list-messages';
+import MessageForm from './send-message/send-message';
 
 export default async function Home() {
   const { error, user }: FetchUserResult = await getUser();
@@ -29,6 +30,7 @@ export default async function Home() {
       </p>
 
       <ListMessages />
+      <MessageForm />
     </main>
   );
 }

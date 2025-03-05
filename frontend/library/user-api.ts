@@ -1,4 +1,4 @@
-import type { FetchUserResult, User } from '@/models/User';
+import type { FetchUserResult, User } from '@/models/user';
 
 import { apiUrl } from './constants';
 

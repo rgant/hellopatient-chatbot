@@ -4,6 +4,22 @@ import { useEffect, useState } from 'react';
 
 import { apiUrl } from './constants';
 
+export const sendMessage = async (formData: FormData): Promise<void> => {
+  const payload = JSON.stringify(Object.fromEntries(formData));
+  console.log('PAYLOAD', payload);
+  const response = await fetch(`${apiUrl}/messages/me`, {
+    body: payload,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  });
+
+  // Handle response if necessary
+  const data = await response.json();
+  console.log('DATA', data);
+};
+
 export const useFetchMessages = (): FetchMessagesResult => {
   const [messages, setData] = useState<Message[] | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
