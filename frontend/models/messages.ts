@@ -1,5 +1,6 @@
 export interface FetchMessagesResult {
   error: Error | undefined;
+  fetchData: () => void;
   loading: boolean;
   messages: Message[] | undefined;
 }

@@ -1,9 +1,9 @@
 'use client';
 
 import type { FetchMessagesResult } from '@/models/messages';
-import type { FC } from 'react';
 
 import { useFetchMessages } from '@/library/message-api';
+import { type FC, useEffect } from 'react';
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
@@ -11,7 +11,12 @@ const formatDate = (dateString: string): string => {
 };
 
 const ListMessages: FC = () => {
-  const { error, loading, messages }: FetchMessagesResult = useFetchMessages();
+  const { error, fetchData, loading, messages }: FetchMessagesResult = useFetchMessages();
+
+  useEffect(
+    () => { fetchData(); },
+    [],
+  );
 
   if (loading) {
     return <p>Loading...</p>;
