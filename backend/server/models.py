@@ -20,7 +20,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(30))
 
-    messages: Mapped[list["Message"]] = relationship(back_populates="user")
+    messages: Mapped[list["Message"]] = relationship(back_populates="user", lazy="select")
 
     @override
     def __repr__(self) -> str:
@@ -30,7 +30,7 @@ class User(Base):
 class Message(Base):
     __tablename__: str = "message"
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     message: Mapped[str] = mapped_column(String, nullable=False)
     sent_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())  # pylint: disable=not-callable; false positive
