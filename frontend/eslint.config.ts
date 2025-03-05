@@ -30,6 +30,20 @@ export default tseslint.config(
       tsdoc,
     },
     rules: {
+      '@stylistic/brace-style': [
+        'error',
+        '1tbs',
+        { allowSingleLine: true },
+      ],
+      '@stylistic/member-delimiter-style': [
+        'error',
+        {
+          multiline: {
+            delimiter: 'semi',
+            requireLast: true,
+          },
+        },
+      ],
       '@stylistic/quote-props': ['error', 'as-needed'],
       '@stylistic/quotes': [
         'error',
@@ -37,6 +51,24 @@ export default tseslint.config(
         { avoidEscape: true },
       ],
       '@stylistic/semi': ['error', 'always'],
+      'perfectionist/sort-jsx-props': [
+        'error',
+        {
+          customGroups: {
+            important1: '^(id|name|rel|src)$',
+            important2: '^href$',
+            react: 'key',
+          },
+          groups: [
+            'react',
+            'important1',
+            'important2',
+            'unknown',
+            'shorthand',
+          ],
+        },
+      ],
+      'perfectionist/sort-union-types': 'off', // Use @typescript-eslint/sort-type-constituents instead
     },
     settings: {
       'import-x/resolver-next': [

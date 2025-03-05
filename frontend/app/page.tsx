@@ -1,22 +1,34 @@
-interface User {
-  id: string
-  name: string
-}
+import type { FetchUserResult } from '@/models/User';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+import { getUser } from '@/library/user-api';
+
+import ListMessages from './list-messages/list-messages';
 
 export default async function Home() {
-  console.log('fetch', `${apiUrl}/users/me`);
-  const user: User = await fetch(`${apiUrl}/users/me`).then(response =>
-    response.json(),
-  );
+  const { error, user }: FetchUserResult = await getUser();
+
+  if (error) {
+    return (
+      <p>
+        Error:
+        {error.message}
+      </p>
+    );
+  }
+
+  if (!user) {
+    return <p>User not found.</p>;
+  }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Hello,
-      {' '}
-      {user.name}
-      !
+    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <p>
+        Hello,
+        {user.name}
+        !
+      </p>
+
+      <ListMessages />
     </main>
   );
 }

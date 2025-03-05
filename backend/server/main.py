@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi import status as http_status_codes
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -10,9 +11,19 @@ from .db_models import Message, User
 from .seed import seed_user_if_needed
 from .utilities import get_response, read_response
 
+ORIGINS = [
+    "http://localhost:3000",
+]
+
 seed_user_if_needed()
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+)
 
 
 @app.get("/users/me")
