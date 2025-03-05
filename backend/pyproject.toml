@@ -13,6 +13,7 @@ greenlet = "*"
 psycopg2 = "*"
 uvicorn = "*"
 mypy = "^1.15.0"
+alembic = "^1.15.1"
 
 
 [tool.poetry.group.dev.dependencies]

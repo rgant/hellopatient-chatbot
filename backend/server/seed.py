@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .db_engine import sync_engine
-from .models import User
+from .models import Message, User
 
 
 def seed_user_if_needed() -> None:
@@ -13,5 +13,8 @@ def seed_user_if_needed() -> None:
                 print("User already exists, skipping seeding")
                 return
             print("Seeding user")
-            session.add(User(name="Alice"))
+            user = User(name="Alice")
+            test_message = Message(user_id=user.id, message="This is a test")
+            user.messages.append(test_message)
+            session.add(user)
             session.commit()
